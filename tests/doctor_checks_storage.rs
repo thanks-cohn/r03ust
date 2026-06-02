@@ -10,8 +10,8 @@ fn doctor_fails_before_init_and_passes_after_init() {
     let before = run_in(dir.path(), &["doctor"]);
     assert_eq!(before.status.code(), Some(1));
     let before_stdout = stdout(&before);
-    assert!(before_stdout.contains(".r03bust exists: false"));
-    assert!(before_stdout.contains("r03bust storage is missing or unusable"));
+    assert!(before_stdout.contains(".r03ust exists: false"));
+    assert!(before_stdout.contains("r03ust storage is missing or unusable"));
 
     assert_success(&run_in(dir.path(), &["init"]));
 
@@ -20,7 +20,7 @@ fn doctor_fails_before_init_and_passes_after_init() {
     let after_stdout = stdout(&after);
     assert!(after_stdout.contains("ledger readable: true"));
     assert!(after_stdout.contains("logs writable: true"));
-    assert!(after_stdout.contains("r03bust storage is usable"));
+    assert!(after_stdout.contains("r03ust storage is usable"));
 }
 
 struct TempProject {
@@ -30,7 +30,7 @@ struct TempProject {
 impl TempProject {
     fn new() -> Self {
         let path = std::env::temp_dir().join(format!(
-            "r03bust-test-{}-{}",
+            "r03ust-test-{}-{}",
             std::process::id(),
             SystemTime::now()
                 .duration_since(UNIX_EPOCH)
@@ -61,9 +61,9 @@ fn run_in(path: &Path, args: &[&str]) -> Output {
 }
 
 fn bin() -> PathBuf {
-    std::env::var_os("CARGO_BIN_EXE_r03bust")
+    std::env::var_os("CARGO_BIN_EXE_r03ust")
         .map(PathBuf::from)
-        .or_else(|| option_env!("CARGO_BIN_EXE_r03bust").map(PathBuf::from))
+        .or_else(|| option_env!("CARGO_BIN_EXE_r03ust").map(PathBuf::from))
         .unwrap()
 }
 

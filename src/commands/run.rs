@@ -53,7 +53,7 @@ pub fn run(command: Vec<String>) -> Result<u8> {
 
     ledger_writer::append(&cwd, &receipt)?;
     println!(
-        "recorded r03bust receipt: success={} exit_code={}",
+        "recorded r03ust receipt: success={} exit_code={}",
         receipt.success, receipt.exit_code
     );
 

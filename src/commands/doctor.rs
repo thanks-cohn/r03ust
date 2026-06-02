@@ -30,17 +30,17 @@ pub fn run() -> Result<u8> {
     let ledger_readable = OpenOptions::new().read(true).open(&ledger).is_ok();
     let logs_writable = logs_exists && tempfile_in_logs_is_writable(&logs);
 
-    println!(".r03bust exists: {}", storage_ok);
+    println!(".r03ust exists: {}", storage_ok);
     println!("ledger.jsonl exists: {}", ledger_exists);
     println!("logs directory exists: {}", logs_exists);
     println!("ledger readable: {}", ledger_readable);
     println!("logs writable: {}", logs_writable);
 
     if storage_ok && ledger_exists && logs_exists && ledger_readable && logs_writable {
-        println!("r03bust storage is usable");
+        println!("r03ust storage is usable");
         Ok(0)
     } else {
-        println!("r03bust storage is missing or unusable; run `r03bust init`");
+        println!("r03ust storage is missing or unusable; run `r03ust init`");
         Ok(1)
     }
 }

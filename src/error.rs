@@ -17,7 +17,7 @@ impl fmt::Display for R03bustError {
             Self::Io(error) => write!(formatter, "I/O error: {error}"),
             Self::StorageMissing => write!(
                 formatter,
-                "r03bust storage is missing; run `r03bust init` first"
+                "r03ust storage is missing; run `r03ust init` first"
             ),
             Self::LedgerMissing(path) => {
                 write!(formatter, "ledger is missing at {}", path.display())

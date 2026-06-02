@@ -63,7 +63,7 @@ struct TempProject {
 impl TempProject {
     fn new() -> Self {
         let path = std::env::temp_dir().join(format!(
-            "r03bust-test-{}-{}",
+            "r03ust-test-{}-{}",
             std::process::id(),
             SystemTime::now()
                 .duration_since(UNIX_EPOCH)
@@ -98,9 +98,9 @@ fn run_in(path: &Path, args: &[&str]) -> Output {
 }
 
 fn bin() -> PathBuf {
-    std::env::var_os("CARGO_BIN_EXE_r03bust")
+    std::env::var_os("CARGO_BIN_EXE_r03ust")
         .map(PathBuf::from)
-        .or_else(|| option_env!("CARGO_BIN_EXE_r03bust").map(PathBuf::from))
+        .or_else(|| option_env!("CARGO_BIN_EXE_r03ust").map(PathBuf::from))
         .unwrap()
 }
 
@@ -115,7 +115,7 @@ fn assert_success(output: &Output) {
 }
 
 fn ledger_lines(path: &Path) -> Vec<String> {
-    fs::read_to_string(path.join(".r03bust/ledger.jsonl"))
+    fs::read_to_string(path.join(".r03ust/ledger.jsonl"))
         .unwrap()
         .lines()
         .map(ToOwned::to_owned)

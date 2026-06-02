@@ -2,7 +2,7 @@ use crate::error::{R03bustError, Result};
 use std::fs::{self, OpenOptions};
 use std::path::{Path, PathBuf};
 
-pub const STORAGE_DIR: &str = ".r03bust";
+pub const STORAGE_DIR: &str = ".r03ust";
 pub const LEDGER_FILE: &str = "ledger.jsonl";
 pub const LOGS_DIR: &str = "logs";
 

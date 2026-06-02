@@ -5,7 +5,7 @@ use crate::util::fs;
 pub fn run() -> Result<u8> {
     let cwd = std::env::current_dir()?;
     if let Err(error) = fs::ensure_storage(&cwd) {
-        println!("no usable r03bust storage: {error}");
+        println!("no usable r03ust storage: {error}");
         return Ok(0);
     }
 

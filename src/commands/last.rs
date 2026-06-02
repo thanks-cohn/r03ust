@@ -5,7 +5,7 @@ use crate::util::fs;
 pub fn run() -> Result<u8> {
     let cwd = std::env::current_dir()?;
     if let Err(error) = fs::ensure_storage(&cwd) {
-        println!("no usable r03bust storage: {error}");
+        println!("no usable r03ust storage: {error}");
         return Ok(0);
     }
 
@@ -15,7 +15,7 @@ pub fn run() -> Result<u8> {
     }
 
     let Some(receipt) = receipts.last() else {
-        println!("no run receipts found in .r03bust/ledger.jsonl");
+        println!("no run receipts found in .r03ust/ledger.jsonl");
         return Ok(0);
     };
 

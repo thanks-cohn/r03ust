@@ -1,13 +1,13 @@
 ```
-r03bust/
+r03ust/
   README.md
   LICENSE
   Cargo.toml
   .gitignore
 
   docs/
-    r03bust-standard.md
-    r03bust-method.md
+    r03ust-standard.md
+    r03ust-method.md
     r03ust-python.md
     repo-shape.md
     ledger-format.md
@@ -20,14 +20,14 @@ r03bust/
       pyproject.toml
       src/
       tests/
-      .r03bust-example/
+      .r03ust-example/
 
     rust-app/
       README.md
       Cargo.toml
       src/
       tests/
-      .r03bust-example/
+      .r03ust-example/
 
   src/
     main.rs
@@ -115,9 +115,9 @@ r03bust/
     clean-demo.sh
 
   templates/
-    r03bust/
+    r03ust/
       config.toml
-      README.r03bust.md
+      README.r03ust.md
       revive.sh
 
   target/

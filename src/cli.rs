@@ -42,5 +42,5 @@ pub fn parse() -> Result<Commands> {
 }
 
 fn usage() -> String {
-    "usage: r03bust <init|run|last|ledger|doctor>".to_string()
+    "usage: r03ust <init|run|last|ledger|doctor>".to_string()
 }

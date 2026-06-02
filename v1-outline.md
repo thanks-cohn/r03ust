@@ -9,11 +9,11 @@ R03UST/
 
   DOCS/
 
-    R03BUST-STANDARD.md        (the official run resurrection standard)
-    R03BUST-METHOD.md          (remove, recreate, revive)
-    R03BUST-PYTHON.md          (python environment integration)
-    R03BUST-RUST.md            (cargo project integration)
-    R03BUST-ZIG.md             (zig project integration)
+    R03UST-STANDARD.md        (the official run resurrection standard)
+    R03UST-METHOD.md          (remove, recreate, revive)
+    R03UST-PYTHON.md          (python environment integration)
+    R03UST-RUST.md            (cargo project integration)
+    R03UST-ZIG.md             (zig project integration)
     LEDGER-FORMAT.md           (append-only run history specification)
     RECEIPT-FORMAT.md          (single successful run record schema)
     REVIVE-FLOW.md             (how projects return to working state)
@@ -25,30 +25,30 @@ R03UST/
 
     PYTHON-BASIC/
 
-      README.md                (walkthrough of a python project using r03bust)
+      README.md                (walkthrough of a python project using r03ust)
       REQUIREMENTS.TXT         (example dependency set)
       PYPROJECT.TOML           (example project metadata)
       SRC/
       TESTS/
-      .R03BUST/
+      .R03UST/
 
     RUST-BASIC/
 
-      README.md                (walkthrough of a cargo project using r03bust)
+      README.md                (walkthrough of a cargo project using r03ust)
       CARGO.TOML
       CARGO.LOCK
       SRC/
       TESTS/
-      .R03BUST/
+      .R03UST/
 
     ZIG-BASIC/
 
-      README.md                (walkthrough of a zig project using r03bust)
+      README.md                (walkthrough of a zig project using r03ust)
       BUILD.ZIG
       BUILD.ZIG.ZON
       SRC/
       TESTS/
-      .R03BUST/
+      .R03UST/
 
     POLYGLOT-BASIC/
 
@@ -161,11 +161,11 @@ R03UST/
 
   TEMPLATES/
 
-    R03BUST/
+    R03UST/
 
       CONFIG.TOML             (default project configuration)
       REVIVE.SH               (generated revival script)
-      README.R03BUST.MD       (explains project ledger folder)
+      README.R03UST.MD       (explains project ledger folder)
 
     PYTHON/
 

@@ -1,42 +1,42 @@
-# r03bust
+# r03ust
 
-r03bust is a run receipt tool for remembering what actually happened when a command ran.
+r03ust is a run receipt tool for remembering what actually happened when a command ran.
 
 The long-term standard is about run resurrection: remove mystery, recreate conditions, and revive a project later. This repository is intentionally **not** the full standard yet. The current implementation is a smallest honest v0 with one job:
 
 > create a truthful run receipt.
 
-Git remembers what changed. r03bust remembers what worked.
+Git remembers what changed. r03ust remembers what worked.
 
 ## WORKING IN V0
 
 The v0 CLI implements only the receipt path:
 
 ```bash
-r03bust init
-r03bust run -- <command...>
-r03bust last
-r03bust ledger
-r03bust doctor
+r03ust init
+r03ust run -- <command...>
+r03ust last
+r03ust ledger
+r03ust doctor
 ```
 
-### `r03bust init`
+### `r03ust init`
 
 Creates the minimal storage shape:
 
 ```text
-.r03bust/
+.r03ust/
   ledger.jsonl
   logs/
 ```
 
 The command is idempotent. Running it again does not erase existing ledger data.
 
-### `r03bust run -- <command...>`
+### `r03ust run -- <command...>`
 
-Runs the real command after `--`, captures stdout and stderr into log files, and appends one JSON receipt to `.r03bust/ledger.jsonl`.
+Runs the real command after `--`, captures stdout and stderr into log files, and appends one JSON receipt to `.r03ust/ledger.jsonl`.
 
-A failed wrapped command is still recorded honestly. The receipt records `success: false` and the real exit code, and the `r03bust run` process exits with that same code.
+A failed wrapped command is still recorded honestly. The receipt records `success: false` and the real exit code, and the `r03ust run` process exits with that same code.
 
 Each v0 receipt includes:
 
@@ -61,21 +61,21 @@ git_dirty
 
 If git data is unavailable, the git fields are recorded as `null` instead of crashing.
 
-### `r03bust last`
+### `r03ust last`
 
 Reads the newest valid receipt and prints the command, result, duration, logs, and git state. If the ledger is empty, it says so clearly. If a ledger line is malformed, it reports the bad line number without panicking.
 
-### `r03bust ledger`
+### `r03ust ledger`
 
 Prints a compact receipt history and handles missing storage, empty ledgers, malformed lines, and mixed success/failure receipts.
 
-### `r03bust doctor`
+### `r03ust doctor`
 
-Checks whether the current directory can use r03bust storage. It reports:
+Checks whether the current directory can use r03ust storage. It reports:
 
 ```text
 current working directory
-.r03bust exists
+.r03ust exists
 ledger.jsonl exists
 logs directory exists
 ledger readable
@@ -86,7 +86,7 @@ OS
 architecture
 ```
 
-Doctor returns nonzero only when r03bust storage is missing or unusable.
+Doctor returns nonzero only when r03ust storage is missing or unusable.
 
 ## NOT YET IMPLEMENTED
 
@@ -109,7 +109,7 @@ No output in v0 claims those features work.
 
 ## PLANNED LATER
 
-Later versions may implement the broader r03bust standard:
+Later versions may implement the broader r03ust standard:
 
 - known-good success receipts
 - project and dependency snapshots

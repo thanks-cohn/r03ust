@@ -36,7 +36,7 @@ fn ledger_and_last_report_malformed_lines_without_panic() {
     init(dir.path());
     assert_success(&run_in(dir.path(), &["run", "--", "echo", "good"]));
 
-    let ledger = dir.path().join(".r03bust/ledger.jsonl");
+    let ledger = dir.path().join(".r03ust/ledger.jsonl");
     let first_line = fs::read_to_string(&ledger).unwrap();
     let mut file = OpenOptions::new().append(true).open(&ledger).unwrap();
     writeln!(file, "not-json").unwrap();
@@ -60,7 +60,7 @@ struct TempProject {
 impl TempProject {
     fn new() -> Self {
         let path = std::env::temp_dir().join(format!(
-            "r03bust-test-{}-{}",
+            "r03ust-test-{}-{}",
             std::process::id(),
             SystemTime::now()
                 .duration_since(UNIX_EPOCH)
@@ -95,9 +95,9 @@ fn run_in(path: &Path, args: &[&str]) -> Output {
 }
 
 fn bin() -> PathBuf {
-    std::env::var_os("CARGO_BIN_EXE_r03bust")
+    std::env::var_os("CARGO_BIN_EXE_r03ust")
         .map(PathBuf::from)
-        .or_else(|| option_env!("CARGO_BIN_EXE_r03bust").map(PathBuf::from))
+        .or_else(|| option_env!("CARGO_BIN_EXE_r03ust").map(PathBuf::from))
         .unwrap()
 }
 
