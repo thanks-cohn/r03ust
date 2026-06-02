@@ -1,292 +1,145 @@
-# r03ust
-(robust)
+# r03bust
 
-r03ust: THE RUN RESURRECTION STANDARD
+r03bust is a run receipt tool for remembering what actually happened when a command ran.
 
-REAL SOFTWARE SHOULD REMEMBER WHY IT WORKED.
+The long-term standard is about run resurrection: remove mystery, recreate conditions, and revive a project later. This repository is intentionally **not** the full standard yet. The current implementation is a smallest honest v0 with one job:
 
-r03ust is a project standard and command-line system for recording, explaining, and reviving successful software runs. Its purpose is simple: remove mystery from working software.
+> create a truthful run receipt.
 
-Most projects fail slowly because nobody remembers the exact conditions under which they last worked. The command ran once. The build passed once. The demo launched once. Then the machine changed, the dependencies shifted, the environment drifted, and the project became a corpse with no autopsy.
+Git remembers what changed. r03bust remembers what worked.
 
-r03ust fixes that.
+## WORKING IN V0
 
-It creates a run ledger: a durable, inspectable record of what ran, where it ran, how it ran, what machine it ran on, what dependencies existed, what compiler was used, what environment variables mattered, what artifacts were produced, and what conditions surrounded success.
+The v0 CLI implements only the receipt path:
 
-The standard is built around the r03ust Method:
+```bash
+r03bust init
+r03bust run -- <command...>
+r03bust last
+r03bust ledger
+r03bust doctor
+```
 
-1. REMOVE THE MYSTERY
+### `r03bust init`
 
-Every successful run must leave evidence.
+Creates the minimal storage shape:
 
-The project should record the command, timestamp, working directory, git commit, compiler version, dependency state, system info, CPU, kernel, OS, memory, target platform, important environment variables, output logs, exit code, duration, artifact hashes, and any warnings or unusual conditions.
+```text
+.r03bust/
+  ledger.jsonl
+  logs/
+```
 
-A working project should never say:
+The command is idempotent. Running it again does not erase existing ledger data.
 
-“It worked before, but I don’t know why.”
+### `r03bust run -- <command...>`
 
-It should say:
+Runs the real command after `--`, captures stdout and stderr into log files, and appends one JSON receipt to `.r03bust/ledger.jsonl`.
 
-“It worked here, under these conditions, with this toolchain, from this commit, producing these artifacts.”
+A failed wrapped command is still recorded honestly. The receipt records `success: false` and the real exit code, and the `r03bust run` process exits with that same code.
 
-2. RECREATE THE CONDITIONS
+Each v0 receipt includes:
 
-The ledger is not just history. It is a reconstruction map.
-
-r03ust should make it easy to compare the current machine against the last known successful run. It should identify changed dependencies, changed compilers, changed environment variables, missing tools, missing files, altered paths, different CPU architecture, different OS/kernel, changed Cargo.lock, changed config, and changed artifacts.
-
-The goal is not perfect time travel.
-
-The goal is to get close enough to truth that the developer can stop guessing.
-
-3. REVIVE THE PROJECT
-
-A project should be returnable.
-
-After weeks, months, or years away, the developer should be able to enter the folder and run:
-
-r03ust status
-r03ust last
-r03ust diff
-r03ust doctor
-r03ust revive
-
-And quickly understand:
-
-what last worked,
-why it worked,
-what changed,
-what is missing,
-what command to try first,
-and what must be restored.
-
-r03ust is not only reproducibility.
-
-It is revivability.
-
-THE STANDARD
-
-A r03ust-compliant project contains a .r03ust directory.
-
-Example shape:
-
-.r03ust/
-ledger.jsonl
-success/
-last-build.json
-last-test.json
-last-run.json
-logs/
-stdout/
-stderr/
-machine/
-hostname.txt
-cpu.txt
-os.txt
-kernel.txt
-memory.txt
-env/
-safe-env.json
-path-hash.txt
-artifacts/
-hashes.json
-diffs/
-config.toml
-
-The ledger should be append-only by default. Every meaningful run adds a record. Successful runs are promoted into the success directory. Failed runs may be recorded separately, but the heart of the standard is the successful run receipt.
-
-A run receipt should answer:
-
-What command ran?
-Where did it run?
-When did it run?
-Who ran it?
-What machine ran it?
-What compiler/toolchain ran it?
-What dependencies existed?
-What environment mattered?
-What files or configs mattered?
-What artifacts came out?
-Did it succeed?
-How long did it take?
-What changed since last success?
-
-CORE COMMANDS
-
-r03ust init
-
-Creates the .r03ust structure.
-
-r03ust run <command>
-
-Runs a command through r03ust and records the result.
-
-Example:
-
-r03ust run cargo build
-r03ust run cargo test
-r03ust run ./zig-out/bin/zag doctor
-
-r03ust last
-
-Shows the last known successful run.
-
-r03ust status
-
-Shows whether the current project resembles the last successful state.
-
-r03ust diff
-
-Compares the current machine, environment, dependency state, and project state against the last successful run.
-
-r03ust doctor
-
-Explains what is missing, changed, suspicious, or likely broken.
-
-r03ust revive
-
-Prints the fastest known path back to a working state.
-
-r03ust ledger
-
-Shows the run history.
-
-r03ust seal
-
-Marks a run as important, stable, or release-worthy.
-
-r03ust explain
-
-Turns the ledger into a human-readable restoration note.
-
-WHAT r03ust RECORDS
-
-Minimum required fields:
-
-project_name
-project_path
+```text
+schema_version
 timestamp
+cwd
 command
+argv
 exit_code
+success
 duration_ms
-git_commit
-git_branch
-dirty_state
+stdout_log
+stderr_log
+os
+arch
 hostname
-username
-os_name
-os_version
-kernel
+git_branch
+git_commit
+git_dirty
+```
+
+If git data is unavailable, the git fields are recorded as `null` instead of crashing.
+
+### `r03bust last`
+
+Reads the newest valid receipt and prints the command, result, duration, logs, and git state. If the ledger is empty, it says so clearly. If a ledger line is malformed, it reports the bad line number without panicking.
+
+### `r03bust ledger`
+
+Prints a compact receipt history and handles missing storage, empty ledgers, malformed lines, and mixed success/failure receipts.
+
+### `r03bust doctor`
+
+Checks whether the current directory can use r03bust storage. It reports:
+
+```text
+current working directory
+.r03bust exists
+ledger.jsonl exists
+logs directory exists
+ledger readable
+logs writable
+git available
+inside git repo or not
+OS
 architecture
-cpu_model
-ram_total
-rustc_version
-cargo_version
-target_triple
-Cargo.lock hash
-Cargo.toml hash
-PATH hash
-important environment variables
-artifact paths
-artifact hashes
-stdout log path
-stderr log path
+```
 
-Optional fields:
+Doctor returns nonzero only when r03bust storage is missing or unusable.
 
-GPU
-disk space
-installed system packages
-container image
-Nix flake hash
-Docker image hash
-Zig version
-Node version
-Python version
-database version
-open ports
-service status
-benchmark result
-cold-cache/warm-cache marker
-notes
+## NOT YET IMPLEMENTED
 
-THE CULTURE
+v0 does **not** implement:
 
-r03ust belongs to the same family as real software survives abuse, outline-legible engineering, repo shape, mystery sludge, and unearned complexity.
+- revive
+- diff
+- seal
+- explain
+- status
+- adapters
+- dependency drift detection
+- artifact comparison
+- success promotion
+- environment capture beyond basic machine/git data
+- full project resurrection
+- templates, examples, background watchers, or generated revive scripts
 
-It exists because working software should not depend on memory, vibes, luck, or one developer’s fragile ritual.
+No output in v0 claims those features work.
 
-The project should confess.
+## PLANNED LATER
 
-If it worked once, it should confess why.
+Later versions may implement the broader r03bust standard:
 
-If it broke later, it should confess what changed.
+- known-good success receipts
+- project and dependency snapshots
+- toolchain and environment comparison
+- artifact hashing and comparison
+- adapters for Python, Rust, Zig, Node, and other ecosystems
+- drift diagnosis
+- revive plans
+- human-readable explain reports
+- release sealing
 
-If it must be revived, it should leave a trail.
+Those features will be added only when they can record real behavior instead of placeholder state.
 
-SLOGANS
+## Build and test
 
-REAL SOFTWARE LEAVES RECEIPTS.
+```bash
+cargo build
+cargo test
+cargo fmt --check
+cargo clippy -- -D warnings
+```
 
-IF IT WORKED ONCE, IT SHOULD CONFESS WHY.
+## Example commands
 
-NO MYSTERY BUILDS.
-
-NO GHOST SUCCESS.
-
-REVIVABLE RUNS OVER VAGUE REPRODUCIBILITY.
-
-THE MACHINE REMEMBERS.
-
-REMOVE. RECREATE. REVIVE.
-
-WHY RUST
-
-Rust is a strong language for r03ust because the tool itself must be fast, portable, dependable, and easy to ship as a single binary.
-
-The standard is about trust, so the tool should feel trustworthy.
-
-Rust gives r03ust:
-
-fast startup,
-safe filesystem handling,
-strong parsing,
-cross-platform potential,
-single-binary distribution,
-excellent CLI ergonomics,
-good JSON/TOML support,
-strong hashing libraries,
-and natural integration with Cargo projects.
-
-But r03ust should not only serve Rust.
-
-Rust builds the tool.
-
-The standard serves every project.
-
-A C project can use it.
-A Zig project can use it.
-A Python project can use it.
-A Node project can use it.
-A shell-script project can use it.
-
-r03ust is not a Rust-only build tool.
-
-It is a run resurrection standard written in Rust.
-
-THE PROMISE
-
-A forgotten project should not feel like an abandoned ruin.
-
-It should feel like a machine under a tarp.
-
-Pull the cover off.
-Read the ledger.
-Recreate the conditions.
-Revive the run.
-
-That is r03ust.
-
-REMOVE the mystery.
-RECREATE the conditions.
-REVIVE the project.
+```bash
+cargo run -- init
+cargo run -- run -- echo hello
+cargo run -- last
+cargo run -- ledger
+cargo run -- doctor
+cargo run -- run -- sh -c "echo bad >&2; exit 7"
+cargo run -- last
+```
