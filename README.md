@@ -1,5 +1,10 @@
 # r03ust
 
+
+<p align="center">
+  <img src="RB_AKA_Rustbucket_the_mascot.png" alt="RD(also Robby but mostly arbie, actually rustbuckets)" width="720"> 
+</p>
+
 r03ust is a run receipt tool for remembering what actually happened when a command ran.
 
 The long-term standard is about run resurrection: remove mystery, recreate conditions, and revive a project later. This repository is intentionally **not** the full standard yet. The current implementation is a smallest honest v0 with one job:
